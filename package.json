@@ -1,0 +1,19 @@
+{
+  "name": "ventaonline",
+  "version": "1.0.0",
+  "description": "VentaOnLine",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bgarcia2016405/VentaOnLine.git"
+  },
+  "author": "Byron Garcia 2016405",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/bgarcia2016405/VentaOnLine/issues"
+  },
+  "homepage": "https://github.com/bgarcia2016405/VentaOnLine#readme"
+}
