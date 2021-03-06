@@ -8,7 +8,9 @@ var api = express.Router();
 
 api.post('/Login', userController.Login);
 
-api.post('/addUser', authentication.ensureAuth, userController.add);
+api.post('/add', authentication.ensureAuth, userController.add);
+
+api.post('/createUser', userController.createUser);
 
 api.put('/editRole/:userID', authentication.ensureAuth, userController.editRole);
 
