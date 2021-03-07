@@ -13,4 +13,8 @@ api.get('/show/:productID', authenticated.ensureAuth, productModel.show);
 
 api.get('/showAllProduct', authenticated.ensureAuth, productModel.showAll);
 
+api.put('/editProduct/:productID', authenticated.ensureAuth, productModel.edit);
+
+api.delete('/dropProduct/:productID', authenticated.ensureAuth, productModel.drop);
+
 module.exports = api;

@@ -1,6 +1,7 @@
 'use strinct'
 
 const productModel = require("../models/product.model");
+const categoryModel = require("../models/category.model");
 const admin = 'Administrador';
 
 function add(req,res){
@@ -11,29 +12,39 @@ function add(req,res){
 
     if (validation != admin) return res.status(404).send({report: 'You are not admin'})
 
-        if(params.nombre && params.stok){
-            productModel.findOne({ name: params.nombre}).exec((err,productFound)=>{
+        categoryModel.findById(categoryID,(err,categoryFound)=>{
+            if(err) return res.status(404).sedn({report:'Error find category'});
 
-                if(err) return res.status(404).send({report: 'Error in find product'});
+            if (!categoryFound) return res.status(402).send({report:'Category dont exist'});
 
-                if(productFound){
-                    return res.status(404).send({report: 'Product exist'})
-                }else{
-                    ProductModel.name = params.nombre;
-                    ProductModel.category = categoryID;
-                    ProductModel.stok = params.stok;
-                    ProductModel.save((err,productSave)=>{
-                        if(err) return res.status(404).send({report: 'Error in save product'});
+            if(params.nombre && params.stok && params.precio){
+                productModel.findOne({ name: params.nombre}).exec((err,productFound)=>{
+    
+                    if(err) return res.status(404).send({report: 'Error in find product'});
+    
+                    if(productFound){
+                        return res.status(404).send({report: 'Product exist'})
+                    }else{
+                        ProductModel.name = params.nombre;
+                        ProductModel.category = categoryID;
+                        ProductModel.stok = params.stok;
+                        ProductModel.price = params.precio;
+                        ProductModel.sold = 0;
+                        ProductModel.save((err,productSave)=>{
+                            if(err) return res.status(404).send({report: 'Error in save product'});
+    
+                            if(!productSave) return res.status(402).send({report: 'unsaved product'});
+    
+                            return res.status(200).send(productSave);
+    
+                        })
+                    }
+    
+                })
+            }else{return res.status(404).send({report:'hola'})}
 
-                        if(!productSave) return res.status(402).send({report: 'unsaved product'});
+        })
 
-                        return res.status(200).send(productSave);
-
-                    })
-                }
-
-            })
-        }
 }
 
 
@@ -64,8 +75,49 @@ function showAll(req,res){
     }).populate('category')
 }
 
+function edit(req,res){
+    var validation = req.user.role;
+    var params = req.body;
+    var productID = req.params.productID;
+
+    if(validation != admin ) return res.status(404).send({report: 'You are not admin'});
+
+    categoryModel.findById(params.category,(err,categoryFound)=>{
+        if(err) return res.status(404).send({report: 'Error in find category'});
+
+        if(!categoryFound) return res.status(403).send({report: 'Category not exist'})
+    })
+
+    productModel.findByIdAndUpdate(productID,params,{new:true},(err,productUpdate)=>{
+        if(err) return res.status(404).send({report: 'Erro find product'})
+
+        if(!productUpdate) return res.status(402).send({report: 'Product dont exist'});
+
+        return res.status(200).send(productUpdate);
+    })
+
+}
+
+function drop(req,res){
+    var validation = req.user.role;
+    var productID = req.params.productID;
+
+    if(validation != admin) return res.status(402).send({report: 'You are not admin'});
+
+    productModel.findByIdAndDelete(productID,(err,productDrop)=>{
+        if(err) return res.status(404).send({report:'Error in delete product'});
+
+        if(!productDrop) return res.status(402).send({report: 'product dont exist'});
+
+        return res.status(200).send(productDrop);
+    })
+
+}
+
 module.exports = {
     add,
     show,
-    showAll
+    showAll,
+    edit,
+    drop
 }

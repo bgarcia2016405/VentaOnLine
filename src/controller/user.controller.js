@@ -3,34 +3,46 @@
 const bcrypt = require("bcrypt-nodejs");
 const jwt = require('../service/jwt');
 const userModel = require("../models/user.model");
+const carModel = require("../models/car.model");
 const admin = 'Administrador';
 const user = 'Cliente'
 
 function Login(req,res){
     var params = req.body;
-    userModel.findOne({ user : params.usuario }, (err, userFound)=>{
-        if (err) return res.status(404).send({ report: 'Error at Login'});
+    var CarModel = new carModel();
+  
+     userModel.findOne({ user : params.usuario }, (err, userFound)=>{
+         if (err) return res.status(404).send({ report: 'Error at Login'});
 
-        if(!userFound) return res.status(404).send({ report: 'user dosent exist'})
+         if(!userFound) return res.status(404).send({ report: 'user dosent exist'});
 
-        if (userFound){
-            bcrypt.compare(params.password, userFound.password, (err,Valid)=>{
+         if (userFound){
 
-                if(err) return res.status(404).send({ report : 'Error in password'});
+            carModel.find({user:userFound._id},(err,carFound)=>{
+                if(err) return res.status(404).send('Error find car');
 
-                
-                if(Valid) {
-
-                    return res.status(200).send({ token: jwt.createToken(userFound)});
-                
-                }else {
-
-                    return res.status(404).send({ report: 'The user its not valid'})
-                    
+                if(carFound.length == 0){
+                    CarModel.user = userFound._id
+                    CarModel.save();
                 }
+                
+                bcrypt.compare(params.password, userFound.password, (err,Valid)=>{
+
+                    if(err) return res.status(404).send({ report : 'Error in password'});
+    
+                     if(Valid) {
+    
+                         return res.status(200).send({ token: jwt.createToken(userFound)});
+                    
+                     }else {
+    
+                        return res.status(404).send({ report: 'The user its not valid'})
+                        
+                     }
+                 })
             })
         }
-    })
+     })
 }
 
 function add(req,res){
