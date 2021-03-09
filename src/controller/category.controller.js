@@ -76,8 +76,28 @@ function edit(req,res){
 }
 
 function drop(req,res){
+    var defaul = 'Default';
+    var Category = new categoryModel();
     var categoryID = req.params.categoryID;
     var validation = req.user.role;
+    categoryModel.find({name:defaul},(err,categoryFound)=>{
+        if(err) return console.log("category request error");
+    
+        if(categoryFound && categoryFound.length >= 1) return console.log('Category alredy exists');
+    
+        Category.name = defaul;
+    
+        Category.save((err,categorySave)=>{
+            if (err) return console.log("save category request error");
+    
+            if(categorySave){
+                return console.log(categorySave);
+            }else{
+                return console.log("not save category");
+            }
+        })
+    
+    })
     if(validation != admin) return res.status(404).send({report: 'You are not admin'})
     categoryModel.findOne({name:"Default"},(err,defaultFound)=>{
         categoryModel.findByIdAndDelete(categoryID,(err,categoryDelete)=>{
@@ -85,7 +105,6 @@ function drop(req,res){
             productModel.find({category:categoryID}).exec((err,productFound)=>{
                 productFound.forEach((newCategory)=>{
                     productModel.findByIdAndUpdate(newCategory._id,{category:defaultFound},(err,elim)=>{
-                       
                     })
                 })
             })
@@ -94,7 +113,6 @@ function drop(req,res){
         })
     })
 }
-
 
 
 module.exports = {

@@ -11,7 +11,7 @@ function addProduct(req,res){
     productModel.findById(params.producto).exec((err,productFound)=>{
         if(!productFound) return res.status(404).send({report: 'Product dont exist'})
         if(productFound.stok < params.cantidad) return res.status(404).send({report: 'theres not enough product'});
-        if(productFound.stok == 0) return res.status(404)
+        if(productFound.stok == 0) return res.status(404).send({report: 'no products'})
         
         var subTotal=price * params.cantidad;
         var price= productFound.price;
@@ -33,7 +33,7 @@ function addProduct(req,res){
 
                 productModel.findByIdAndUpdate(params.producto,{stok:stok-params.cantidad,sold:sold+integer},(err,productUpdate)=>{
                 })
-                carModel.findOneAndUpdate({user:validation},{total:total+subTotal},(err,uptadated)=>{
+                carModel.findOneAndUpdate({user:validation},{total:total+subTotal},{new:true},(err,uptadated)=>{
                     
                 })
                 return res.status(200).send(carFound)    

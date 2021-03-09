@@ -17,4 +17,12 @@ api.put('/editProduct/:productID', authenticated.ensureAuth, productModel.edit);
 
 api.delete('/dropProduct/:productID', authenticated.ensureAuth, productModel.drop);
 
+api.get('/productSoldOut', authenticated.ensureAuth, productModel.productsSoldOut);
+
+api.get('/productsMostSold', authenticated.ensureAuth, productModel.productsMostSold);
+
+api.get('/findProductName', authenticated.ensureAuth, productModel.productName);
+
+api.get('/findProductCategory', authenticated.ensureAuth, productModel.productCategory);
+
 module.exports = api;

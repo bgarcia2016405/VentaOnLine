@@ -13,7 +13,7 @@ function add(req,res){
     if (validation != admin) return res.status(404).send({report: 'You are not admin'})
 
         categoryModel.findById(categoryID,(err,categoryFound)=>{
-            if(err) return res.status(404).sedn({report:'Error find category'});
+            if(err) return res.status(404).send({report:'Error find category'});
 
             if (!categoryFound) return res.status(402).send({report:'Category dont exist'});
 
@@ -114,10 +114,73 @@ function drop(req,res){
 
 }
 
+function productsSoldOut(req,res){
+    var validation = req.user.role;
+
+    if(validation != admin) return res.status(400).send({report: 'You are not admin'});
+
+    productModel.find({stok:0},(err,productFound)=>{
+        if(err) return res.status(404).send({report: 'Error find product'})
+
+        if(productFound && productFound.length == 0) return res.status(402).send({report: 'Product not exist'});
+
+        return res.status(200).send(productFound)
+    })
+}
+
+function productsMostSold(req,res){
+
+    productModel.find((err,productFound)=>{
+        if(err) return res.status(404).send({report:'Error find product'});
+
+        if(productFound && productFound.length == 0) return res.status(402).send({report:'Products not exist'})
+        
+        return res.status(200).send(productFound);
+    }).sort({sold:-1})
+}
+
+function productName(req,res){
+    var params = req.body;
+
+    productModel.findOne({name : {$regex:params.producto, $options: 'i'}},(err,productFound)=>{
+
+        if(!productFound) return res.status(402).send({report: 'Product not exist'})
+
+        return res.status(200).send(productFound);
+
+    }).populate('category')
+
+}
+
+function productCategory(req,res){
+    var params = req.body;
+    categoryModel.findOne({name:{$regex:params.categoria, $options: 'i'}}, (err, categoryFound)=>{
+
+        if(err) return res.status(404).send({report: 'Error find category'})
+
+        if(!categoryFound) return res.status(404).send({report:'Category not exist'})
+
+        productModel.find({category:categoryFound._id},(err,productFound)=>{
+
+            if(err) return res.status(404).send({report: 'Error fidn products'})
+            
+            if(productFound && productFound.length == 0) return res.status(402).send({report: 'There are no products'})
+
+            return res.status(200).send(productFound);
+        }).populate('category')
+
+    })
+    
+}
+
 module.exports = {
     add,
     show,
     showAll,
     edit,
-    drop
+    drop,
+    productsSoldOut,
+    productsMostSold,
+    productName,
+    productCategory
 }

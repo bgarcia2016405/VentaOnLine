@@ -4,6 +4,7 @@ const bcrypt = require("bcrypt-nodejs");
 const jwt = require('../service/jwt');
 const userModel = require("../models/user.model");
 const carModel = require("../models/car.model");
+const billModel = require("../models/bill.model")
 const admin = 'Administrador';
 const user = 'Cliente'
 
@@ -26,21 +27,26 @@ function Login(req,res){
                     CarModel.total = 0;
                     CarModel.save();
                 }
-                
-                bcrypt.compare(params.password, userFound.password, (err,Valid)=>{
+                billModel.find({user:userFound._id},{products:0, user:0},(err,billFound)=>{
 
-                    if(err) return res.status(404).send({ report : 'Error in password'});
-    
-                     if(Valid) {
-    
-                         return res.status(200).send({ token: jwt.createToken(userFound)});
-                    
-                     }else {
-    
-                        return res.status(404).send({ report: 'The user its not valid'})
+                    if(err) return res.status(404).send({report:'Error find bill'})
+
+                    bcrypt.compare(params.password, userFound.password, (err,Valid)=>{
+
+                        if(err) return res.status(404).send({ report : 'Error in password'});
+        
+                         if(Valid) {
+        
+                             return res.status(200).send({ token: jwt.createToken(userFound), billFound}  );
                         
-                     }
-                 })
+                         }else {
+        
+                            return res.status(404).send({ report: 'The user its not valid'})
+                            
+                         }
+                     })
+
+                })
             })
         }
      })
@@ -194,6 +200,8 @@ function drop(req,res){
     }
 
 }
+
+
 
 module.exports = {
     Login,
