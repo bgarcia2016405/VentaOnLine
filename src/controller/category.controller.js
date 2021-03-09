@@ -77,6 +77,8 @@ function edit(req,res){
 
 function drop(req,res){
     var categoryID = req.params.categoryID;
+    var validation = req.user.role;
+    if(validation != admin) return res.status(404).send({report: 'You are not admin'})
     categoryModel.findOne({name:"Default"},(err,defaultFound)=>{
         categoryModel.findByIdAndDelete(categoryID,(err,categoryDelete)=>{
             if(err) return res.status(404).send({report:'Error in delete category'});

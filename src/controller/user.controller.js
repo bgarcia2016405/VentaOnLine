@@ -22,7 +22,8 @@ function Login(req,res){
                 if(err) return res.status(404).send('Error find car');
 
                 if(carFound.length == 0){
-                    CarModel.user = userFound._id
+                    CarModel.user = userFound._id;
+                    CarModel.total = 0;
                     CarModel.save();
                 }
                 
