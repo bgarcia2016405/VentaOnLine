@@ -1,6 +1,5 @@
 'use strict'
 
-const { update } = require("../models/category.model");
 const categoryModel = require("../models/category.model");
 const productModel = require("../models/product.model");
 const admin = 'Administrador';

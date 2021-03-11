@@ -2,22 +2,20 @@
 
 const carModel = require("../models/car.model");
 const productModel = require("../models/product.model");
-const { param } = require("../rutes/car.rutes");
 
 function addProduct(req,res){
     var validation = req.user.sub;
     var params = req.body;
 
-    productModel.findById(params.producto).exec((err,productFound)=>{
-        if(!productFound) return res.status(404).send({report: 'Product dont exist'})
+    productModel.findOne({name: {$regex:params.producto, $options: 'i'}}).exec((err,productFound)=>{
+        if(err) return res.status(404).send({report: 'Error find product'});
+        if(!productFound) return res.status(404).send({report: 'Product dont exist'});
         if(productFound.stok < params.cantidad) return res.status(404).send({report: 'theres not enough product'});
-        if(productFound.stok == 0) return res.status(404).send({report: 'no products'})
         
-        var subTotal=price * params.cantidad;
         var price= productFound.price;
     carModel.findOneAndUpdate({user:validation},
         { $push: { products: {
-            productsID: params.producto,
+            productsID: productFound._id,
             amount: params.cantidad,
             subTotal: price * params.cantidad
         }}},{new:true},(err,carFound)=>{
@@ -34,9 +32,8 @@ function addProduct(req,res){
                 productModel.findByIdAndUpdate(params.producto,{stok:stok-params.cantidad,sold:sold+integer},(err,productUpdate)=>{
                 })
                 carModel.findOneAndUpdate({user:validation},{total:total+subTotal},{new:true},(err,uptadated)=>{
-                    
-                })
-                return res.status(200).send(carFound)    
+                    return res.status(200).send(uptadated)    
+                })  
             })
     })
 }

@@ -75,6 +75,7 @@ function showAll(req,res){
     }).populate('category')
 }
 
+
 function edit(req,res){
     var validation = req.user.role;
     var params = req.body;
@@ -82,21 +83,27 @@ function edit(req,res){
 
     if(validation != admin ) return res.status(404).send({report: 'You are not admin'});
 
-    categoryModel.findById(params.category,(err,categoryFound)=>{
-        if(err) return res.status(404).send({report: 'Error in find category'});
+        categoryModel.findById(params.category,(err,categoryFound)=>{
+            if(err) return res.status(404).send({report: 'Error in find category'});
+    
+            if(!categoryFound) return res.status(403).send({report: 'Category not exist'})
 
-        if(!categoryFound) return res.status(403).send({report: 'Category not exist'})
-    })
+        })
 
+            
     productModel.findByIdAndUpdate(productID,params,{new:true},(err,productUpdate)=>{
-        if(err) return res.status(404).send({report: 'Erro find product'})
+
+        if(err) return res.status(404).send({report: 'Error find product'})
 
         if(!productUpdate) return res.status(402).send({report: 'Product dont exist'});
 
         return res.status(200).send(productUpdate);
-    })
+
+    }).populate('category', 'name')
+        
 
 }
+
 
 function drop(req,res){
     var validation = req.user.role;

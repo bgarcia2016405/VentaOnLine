@@ -2,21 +2,23 @@
 
 const carModel = require("../models/car.model");
 const billModel = require("../models/bill.model");
-const productModel = require
 const admin = 'Administrador';
 
 
 function buy(req,res){
     var validation = req.user.sub;
     var BillModel = new billModel(); 
-    carModel.findOneAndUpdate({user:validation},{$pull:{products:{}}, total:0},(err,carFound)=>{
-        BillModel.user = carFound.user;
-        BillModel.products = carFound.products;
-        BillModel.total = carFound.total;
-        
-        BillModel.save((err,billSave)=>{
-
-            return res.status(200).send(billSave)
+    carModel.find({user:validation},(err,carValidation)=>{
+        if(carValidation[0].total == 0) return res.status(404).send({report: 'Cart without products'})
+        carModel.findOneAndUpdate({user:validation},{$pull:{products:{}}, total:0},(err,carFound)=>{
+            BillModel.user = carFound.user;
+            BillModel.products = carFound.products;
+            BillModel.total = carFound.total;
+            
+            BillModel.save((err,billSave)=>{
+    
+                return res.status(200).send(billSave)
+            })
         })
     })
 }

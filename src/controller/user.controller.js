@@ -56,7 +56,7 @@ function add(req,res){
    var params = req.body;
    var UserModel = new userModel();
    var validation = req.user.role;
-   if (validation == admin){
+   if(validation != admin) return res.status(404).send({return:'You are not admin'})
     if(params.usuario && params.password && params.rol){
         userModel.findOne({ user : params.usuario }).exec((err,userFound)=>{
             if (err) return res.status(404).send({ report: 'Error in find user'})
@@ -86,12 +86,6 @@ function add(req,res){
         })
 
      }
-
-    }else{
-
-        return res.status(404).send({report: 'You are not admin'})
-
-    }
     
 }
 
@@ -142,9 +136,9 @@ function editRole(req,res){
     var validation = req.user.role;
     var userID = req.params.userID;
 
-    if(validation == admin){
+    if(validation != admin) return res.status(404).send({return:'You are not admin'})
 
-        userModel.findOneAndUpdate({_id : userID,role : user},{role:params.rol},{ new: true, useFindAndModify:false },(err,userUpdate)=>{
+        userModel.findOneAndUpdate({_id : userID,role : user},params,{ new: true, useFindAndModify:false },(err,userUpdate)=>{
         
             if(err) return res.status(404).send({report: 'Error in update user'})
 
@@ -153,11 +147,6 @@ function editRole(req,res){
             return res.status(200).send(userUpdate);
         })
 
-    }else{
-        return res.status(404).send({report:'You are not admin'})
-    }
-    
-
 }
 
 function edit(req,res){
@@ -165,7 +154,8 @@ function edit(req,res){
     var validation = req.user.role;
     var userID = req.params.userID;
 
-    if(validation == admin){
+    if(validation != admin) return res.status(404).send({return:'You are not admin'})
+
         userModel.findOneAndUpdate({_id:userID, role:user},{user:params.Usuario},{ new: true, useFindAndModify: false},(err,userFound)=>{
             
             if(err) return res.status(404).send({report: 'Error in update user'})
@@ -175,17 +165,17 @@ function edit(req,res){
 
             return res.status(200).send(userFound);                                             
         })                                                                             
-    }else{
-        return res.status(404).send({return:'You are not admin'})
-    }
 }
+
+
 
 function drop(req,res){
     var userID = req.params.userID;
     var validation = req.user.role;
 
-    if(validation == admin){
-        userModel.findByIdAndDelete(userID, (err, userDeleted)=>{
+    if(validation != admin) return res.status(404).send({return:'You are not admin'})
+
+        userModel.findOneAndDelete({_id:userID, role:user}, (err, userDeleted)=>{
 
             if(err) return res.status(404).send({report: 'Error in delete user'});
 
@@ -195,9 +185,6 @@ function drop(req,res){
 
         });
 
-    }else{
-        return res.status(404).send({return:'You are not admin'})
-    }
 
 }
 
