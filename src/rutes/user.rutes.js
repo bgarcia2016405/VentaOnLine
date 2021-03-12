@@ -18,4 +18,8 @@ api.put('/editUser/:userID', authentication.ensureAuth, userController.edit);
 
 api.delete('/deleteUser/:userID', authentication.ensureAuth, userController.drop);
 
+api.put('/editSameUser', authentication.ensureAuth, userController.editSameUser);
+
+api.delete('/dropSameUser', authentication.ensureAuth, userController.dropSameUser);
+
 module.exports = api;

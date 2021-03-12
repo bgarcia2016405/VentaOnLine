@@ -166,7 +166,7 @@
 						"header": [
 							{
 								"key": "Authorization",
-								"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI2MDQwNDkwZDIyNWQwNDJkYjgxMDJjYTUiLCJ1c2VyIjoiQURNSU4iLCJyb2xlIjoiQWRtaW5pc3RyYWRvciIsImlhdCI6MTYxNDg3NjM2MywiZXhwIjoxNjE1Mzk0NzYzfQ.CtYYvlmu7ZxFIQOg_L-5VkjJiKOkZzJV_HP_M7m7bHo",
+								"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI2MDQ5NThiODI2YzgxMTMyNTBjMTMzMGUiLCJ1c2VyIjoiQURNSU4iLCJyb2xlIjoiQWRtaW5pc3RyYWRvciIsImlhdCI6MTYxNTU4NTU0OCwiZXhwIjoxNjE2MDE3NTQ4fQ.jA5w3ERFC9yniRvfKWTEgOjp8qb4VLZLUBH7PExGACY",
 								"type": "text"
 							}
 						],
@@ -175,13 +175,13 @@
 							"urlencoded": [
 								{
 									"key": "Usuario",
-									"value": "Jorge",
+									"value": "Haldair",
 									"type": "text"
 								}
 							]
 						},
 						"url": {
-							"raw": "localhost:3000/api/editUser/6040f6f65ed261178cebf472",
+							"raw": "localhost:3000/api/editUser/6049597229ed191e2481febb",
 							"host": [
 								"localhost"
 							],
@@ -189,7 +189,76 @@
 							"path": [
 								"api",
 								"editUser",
-								"6040f6f65ed261178cebf472"
+								"6049597229ed191e2481febb"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "New Request",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": null
+					},
+					"response": []
+				},
+				{
+					"name": "EditSameUser",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI2MDQ5NTk3MjI5ZWQxOTFlMjQ4MWZlYmIiLCJ1c2VyIjoiSmF2aWVyIiwicm9sZSI6IkNsaWVudGUiLCJpYXQiOjE2MTU1ODczNjgsImV4cCI6MTYxNjAxOTM2OH0.pIh2_kgvT4dq3hTmWs0IhZgpetthcupjW6xn9ERL0mA",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "Usuario",
+									"value": "Esther",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "localhost:3000/api/editSameUser",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"editSameUser"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "DropSameUser",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI2MDQ5NTk3MjI5ZWQxOTFlMjQ4MWZlYmIiLCJ1c2VyIjoiSmF2aWVyIiwicm9sZSI6IkNsaWVudGUiLCJpYXQiOjE2MTU1ODczNjgsImV4cCI6MTYxNjAxOTM2OH0.pIh2_kgvT4dq3hTmWs0IhZgpetthcupjW6xn9ERL0mA",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "localhost:3000/api/dropSameUser",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"dropSameUser"
 							]
 						}
 					},
@@ -611,7 +680,7 @@
 						"header": [
 							{
 								"key": "Authorization",
-								"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI2MDQ5NTk3MjI5ZWQxOTFlMjQ4MWZlYmIiLCJ1c2VyIjoiSmF2aWVyIiwicm9sZSI6IkNsaWVudGUiLCJpYXQiOjE2MTU0Mjc2MzEsImV4cCI6MTYxNjAzMjQzMX0.F1FtrYaJdzXYcl5gT0CaVAXZVkrKhiBT5U-1ZEK1Xr8",
+								"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI2MDQ5NWEzZGIyNmNjZTA0NzRjYmJkMzUiLCJ1c2VyIjoiSGFsZGFpciIsInJvbGUiOiJBZG1pbmlzdHJhZG9yIiwiaWF0IjoxNjE1NTgyODMwLCJleHAiOjE2MTYwMTQ4MzB9.SrFki9IMXFpPwld8J7yEQ6t4rYknSzM6S9a3g1E6ax4",
 								"type": "text"
 							}
 						],
@@ -620,12 +689,12 @@
 							"urlencoded": [
 								{
 									"key": "producto",
-									"value": "Camarones",
+									"value": "60495e21924d3a2bc0dbfabf",
 									"type": "text"
 								},
 								{
 									"key": "cantidad",
-									"value": "20",
+									"value": "240",
 									"type": "text"
 								}
 							]
@@ -651,7 +720,7 @@
 						"header": [
 							{
 								"key": "Authorization",
-								"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI2MDQ5NTk3MjI5ZWQxOTFlMjQ4MWZlYmIiLCJ1c2VyIjoiSmF2aWVyIiwicm9sZSI6IkNsaWVudGUiLCJpYXQiOjE2MTU0Mjc2MzEsImV4cCI6MTYxNjAzMjQzMX0.F1FtrYaJdzXYcl5gT0CaVAXZVkrKhiBT5U-1ZEK1Xr8",
+								"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI2MDQ5NTk3MjI5ZWQxOTFlMjQ4MWZlYmIiLCJ1c2VyIjoiSmF2aWVyIiwicm9sZSI6IkNsaWVudGUiLCJpYXQiOjE2MTU1ODI4OTIsImV4cCI6MTYxNjAxNDg5Mn0.d4yYn0exbLlyqOHQy_biESbOT9vHFLAG-QeGRhRv4I4",
 								"type": "text"
 							}
 						],

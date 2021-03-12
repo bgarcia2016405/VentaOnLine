@@ -154,7 +154,11 @@ function edit(req,res){
     var validation = req.user.role;
     var userID = req.params.userID;
 
-    if(validation != admin) return res.status(404).send({return:'You are not admin'})
+    if(validation != admin) return res.status(404).send({report:'You are not admin'})
+        userModel.findOne({user: {$regex:params.Usuario, $options: 'i'}},(err,userFound)=>{
+            if(err) return res.status(404).send({report: 'Error found user'});
+            if(userFound) return res.status(404).send({report: 'User exist'})
+        
 
         userModel.findOneAndUpdate({_id:userID, role:user},{user:params.Usuario},{ new: true, useFindAndModify: false},(err,userFound)=>{
             
@@ -164,12 +168,46 @@ function edit(req,res){
             if(!userFound) return res.status(404).send({report: 'user is admin'})
 
             return res.status(200).send(userFound);                                             
-        })                                                                             
+        })    
+    })                                                                         
 }
 
+function editSameUser(req,res){
+    var params = req.body;
+    var validation = req.user.role;
+    var ID = req.user.sub;
+    if(validation == admin) return res.status(404).send({report: 'You are admin'})
+    userModel.findOne({user: {$regex:params.Usuario, $options: 'i'}},(err,userFound)=>{
+        if(err) return res.status(404).send({report: 'Error found user'});
+        if(userFound) return res.status(404).send({report: 'User exist'});
 
+        userModel.findOneAndUpdate({_id:ID},{user:params.Usuario},{ new: true, useFindAndModify: false},(err,userFound)=>{
+            if(err) return res.status(404).send({report: 'Error in update user'})
+
+            if(!serFound) return res.status(404).send({report: 'User not find'})
+
+            return res.status(200).send(userFound);  
+        })
+    })
+}
+
+function dropSameUser(req,res){
+    var validation = req.user.role;
+    var ID = req.user.sub;
+
+    if(validation == admin) return res.status(404).send({report: 'You are admin'});
+
+    userModel.findOneAndDelete({_id:ID},(err, userDeleted)=>{
+        if(err) return res.status(404).send({report: 'Error in delete user'});
+
+            if(!userDeleted) return res.status(404).send({report: 'user not find'});
+
+            return res.status(200).send(userDeleted);
+    })
+}
 
 function drop(req,res){
+    
     var userID = req.params.userID;
     var validation = req.user.role;
 
@@ -196,5 +234,7 @@ module.exports = {
     editRole,
     edit,
     drop,
-    createUser
+    createUser,
+    editSameUser,
+    dropSameUser
 }

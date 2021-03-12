@@ -2,24 +2,45 @@
 
 const carModel = require("../models/car.model");
 const billModel = require("../models/bill.model");
+const productModel = require("../models/product.model");
 const admin = 'Administrador';
 
 
 function buy(req,res){
     var validation = req.user.sub;
     var BillModel = new billModel(); 
-    carModel.find({user:validation},(err,carValidation)=>{
-        if(carValidation[0].total == 0) return res.status(404).send({report: 'Cart without products'})
-        carModel.findOneAndUpdate({user:validation},{$pull:{products:{}}, total:0},(err,carFound)=>{
-            BillModel.user = carFound.user;
-            BillModel.products = carFound.products;
-            BillModel.total = carFound.total;
-            
-            BillModel.save((err,billSave)=>{
-    
-                return res.status(200).send(billSave)
+    carModel.findOne({user:validation},(err,carValidation)=>{
+        var productList = carValidation.products;
+        if(carValidation.total == 0) return res.status(404).send({report: 'Cart without products'})
+        for (let i = 0; i < productList.length; i++) {
+            productModel.findOne({_id:productList[i].productsID},(err,productFound)=>{
+                let stok = productFound.stok;
+                let amount = productList[i].amount;
+                let sold = productFound.sold;
+                if(stok < amount){
+                    carModel.findOneAndUpdate({user:validation},{$pull:{products:{}}, total:0},(err,carFound)=>{
+                    if(err) return res.status(404).send({report:'Error found car'})
+                    if(carFound) return res.status(404).send({report:'product stok insufficient'});   
+                    })
+                }
+                productModel.findByIdAndUpdate(productList[i].productsID,
+                    {stok:stok-amount, sold: sold+amount}, (err,productUpdate)=>{
+                        
+                        carModel.findOneAndUpdate({user:validation},{$pull:{products:{}}, total:0},(err,carFound)=>{
+                        BillModel.user = carFound.user;
+                        BillModel.products = carFound.products;
+                        BillModel.total = carFound.total;
+                        
+                        BillModel.save((err,billSave)=>{
+                
+                            return res.status(200).send(billSave)
+                        })
+                    })
+                    });
+
             })
-        })
+            
+        }
     })
 }
 
